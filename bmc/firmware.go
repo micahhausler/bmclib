@@ -9,6 +9,64 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
+type FirmwareInventoryGetter interface {
+	GetFirmwareInventory(ctx context.Context) (inventory map[string]string, err error)
+}
+
+type FirmwareUploader interface {
+	FirmwareUpload(ctx context.Context, fileReader io.Reader, fileSize int64, componentName string)
+}
+
+type FirmwareInstaller interface {
+	FirmwareInstaller(ctx context.Context)
+}
+
+// GetFirmwareInventoryFromInterfaces is a pass through to library function
+func GetFirmwareInventoryFromInterfaces(ctx context.Context, generic []interface{}) (map[string]string, error) {
+	var err error
+
+	getters := make([]FirmwareInventoryGetter, 0)
+	for _, elem := range generic {
+		switch p := elem.(type) {
+		case FirmwareInventoryGetter:
+			getters = append(getters, p)
+		default:
+			e := fmt.Sprintf("not a BMCVersionGetter implementation: %T", p)
+			err = multierror.Append(err, errors.New(e))
+		}
+	}
+
+	if len(getters) == 0 {
+		return nil, multierror.Append(err, errors.New("no FirmwareInventoryGetter implementations found"))
+	}
+
+	return GetFirmwareInventory(ctx, getters)
+}
+
+// GetFirmwareInventory returns firmware inventory, trying all interface implementations passed in
+func GetFirmwareInventory(ctx context.Context, p []FirmwareInventoryGetter) (inventory map[string]string, err error) {
+Loop:
+	for _, elem := range p {
+		if elem == nil {
+			continue
+		}
+		select {
+		case <-ctx.Done():
+			err = multierror.Append(err, ctx.Err())
+			break Loop
+		default:
+			version, vErr := elem.GetFirmwareInventory(ctx)
+			if vErr != nil {
+				err = multierror.Append(err, vErr)
+				continue
+			}
+			return version, nil
+		}
+	}
+
+	return inventory, multierror.Append(err, errors.New("failed to get BMC version"))
+}
+
 // BMCVersionGetter retrieves the current BMC firmware version information
 type BMCVersionGetter interface {
 	GetBMCVersion(ctx context.Context) (version string, err error)

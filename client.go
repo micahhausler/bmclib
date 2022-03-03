@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/bmc-toolbox/bmclib/bmc"
+	"github.com/bmc-toolbox/bmclib/devices"
 	"github.com/bmc-toolbox/bmclib/providers/asrockrack"
 	"github.com/bmc-toolbox/bmclib/providers/dell/idrac9"
 	"github.com/bmc-toolbox/bmclib/providers/ipmitool"
@@ -218,4 +219,9 @@ func (c *Client) GetBIOSVersion(ctx context.Context) (version string, err error)
 // UpdateBIOSFirmware pass through library function
 func (c *Client) UpdateBIOSFirmware(ctx context.Context, fileReader io.Reader, fileSize int64) (err error) {
 	return bmc.UpdateBIOSFirmwareFromInterfaces(ctx, fileReader, fileSize, c.Registry.GetDriverInterfaces())
+}
+
+// GetInventory pass through library function to collect hardware and firmware inventory
+func (c *Client) GetInventory(ctx context.Context) (device *devices.Device, err error) {
+	return bmc.GetInventoryFromInterfaces(ctx, c.Registry.GetDriverInterfaces())
 }

@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/bombsimon/logrusr/v2 v2.0.1
+	github.com/davecgh/go-spew v1.1.1
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-logr/logr v1.2.0
 	github.com/go-playground/universal-translator v0.17.0 // indirect

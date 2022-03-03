@@ -38,6 +38,44 @@ const (
 	DiscreteHwType = "discrete"
 	// ChassisHwType is the constant defining the chassis hw type
 	ChassisHwType = "chassis"
+
+	// Generic component slugs
+	// Slugs are set on Device types to identify the type of component
+	SlugBackplaneExpander     = "Backplane Expander"
+	SlugChassis               = "Chassis"
+	SlugTPM                   = "TPM"
+	SlugGPU                   = "GPU"
+	SlugCPU                   = "CPU"
+	SlugPhysicalMem           = "PhysicalMemory"
+	SlugStorageController     = "StorageController"
+	SlugStorageControllers    = "StorageControllers"
+	SlugBMC                   = "BMC"
+	SlugBIOS                  = "BIOS"
+	SlugDrive                 = "Drive"
+	SlugDrives                = "Drives"
+	SlugDriveTypePCIeNVMEeSSD = "NVMe PCIe SSD"
+	SlugDriveTypeSATASSD      = "Sata SSD"
+	SlugDriveTypeSATAHDD      = "Sata HDD"
+	SlugNIC                   = "NIC"
+	SlugNICs                  = "NICs"
+	SlugPSU                   = "Power Supply"
+	SlugPSUs                  = "Power Supplies"
+	SlugSASHBA330Controller   = "SAS HBA330 Controller"
+	SlugCPLD                  = "CPLD"
+	SlugEnclosure             = "ENCLOSURE"
+	SlugUnknown               = "unknown"
+
+	// Dell specific component slugs
+	SlugDellSystemCPLD                  = "Dell System CPLD"
+	SlugDellBossAdapter                 = "Boss Adapter"
+	SlugDellIdracServiceModule          = "IDrac Service Module"
+	SlugDellBossAdapterDisk0            = "Boss Adapter - Disk 0"
+	SlugDellBossAdapterDisk1            = "Boss Adapter - Disk 1"
+	SlugDellLifeCycleController         = "Lifecycle Controller"
+	SlugDellOSCollector                 = "OS Collector"
+	SlugDell64bitUefiDiagnostics        = "Dell 64 bit uEFI diagnostics"
+	SlugDellBackplaneExpander           = "Backplane Expander"
+	SlugDellNonExpanderStorageBackplane = "Non-Expander Storage Backplane (SEP)"
 )
 
 // ListSupportedVendors  returns a list of supported vendors
