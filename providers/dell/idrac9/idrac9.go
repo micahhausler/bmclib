@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/go-logr/logr"
 	"github.com/hashicorp/go-multierror"
@@ -40,6 +41,9 @@ type IDrac9 struct {
 	ctx                  context.Context
 	log                  logr.Logger
 	httpClientSetupFuncs []func(*http.Client)
+
+	login bool
+	mu    sync.Mutex // guards login
 }
 
 // IDrac9Option is a type that can configure an *IDrac9
@@ -50,6 +54,13 @@ type IDrac9Option func(*IDrac9)
 func WithSecureTLS(rootCAs *x509.CertPool) IDrac9Option {
 	return func(i *IDrac9) {
 		i.httpClientSetupFuncs = append(i.httpClientSetupFuncs, httpclient.SecureTLSOption(rootCAs))
+	}
+}
+
+// WithHTTPClient sets an HTTP client on an *IDrac9
+func WithHTTPClient(c *http.Client) IDrac9Option {
+	return func(i *IDrac9) {
+		i.httpClient = c
 	}
 }
 
